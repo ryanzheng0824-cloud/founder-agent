@@ -6,6 +6,22 @@ from dotenv import load_dotenv
 
 # --- 1. 全局配置 ---
 st.set_page_config(page_title="雄心荟·创业参谋", page_icon="🦁", layout="wide")
+# ... (st.set_page_config 代码在上面) ...
+
+# === 🦁 隐藏界面元素的 CSS 黑科技 ===
+hide_streamlit_style = """
+<style>
+/* 隐藏右上角的三道杠菜单 */
+#MainMenu {visibility: hidden;}
+/* 隐藏底部的 "Made with Streamlit" */
+footer {visibility: hidden;}
+/* 隐藏顶部的导航栏线 */
+header {visibility: hidden;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# ... (剩下的代码在下面) ...
 load_dotenv()
 
 # 获取 Key
@@ -135,7 +151,7 @@ if start_btn and topic:
     binary_output.seek(0)
     
     # 文件名
-    file_name = f"创业评测_{topic}_{datetime.now().strftime('%Y%m%d')}.docx"
+    file_name = f"创业评测_{topic}_{datetime.datetime.now().strftime('%Y%m%d')}.docx"
     
     st.download_button(
         label="📥 下载 Word 报告 (手机友好版)",
