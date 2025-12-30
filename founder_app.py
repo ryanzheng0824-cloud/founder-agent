@@ -111,22 +111,41 @@ if start_btn and topic:
 
 # ... (前面的代码不变) ...
     
+    # ... (前面的代码不变) ...
+    
     # --- 4. 结果展示 ---
     st.divider()
     st.markdown(article)
+
+    # === 🌟 升级版：生成 Word 文档 ===
+    from docx import Document
+    from io import BytesIO
+
+    # 创建一个内存里的 Word 文档
+    doc = Document()
+    doc.add_heading(f'🦁 雄心荟·创业评测：{topic}', 0)
     
-    # === 🌟 新增功能：下载报告按钮 ===
-    # 把当前的日期加到文件名里，比如 "创业评测_鲜花店_20251021.md"
-    from datetime import datetime
-    date_str = datetime.now().strftime("%Y%m%d")
-    file_name = f"创业评测_{topic}_{date_str}.md"
+    # 把生成的报告写入 Word (注意：Word 不会自动渲染 Markdown 的加粗格式，但内容都在)
+    doc.add_paragraph(article)
+    doc.add_paragraph('\n\n(由 DeepSeek & 雄心荟 AI 参谋生成)')
+
+    # 保存到内存
+    binary_output = BytesIO()
+    doc.save(binary_output)
+    binary_output.seek(0)
+    
+    # 文件名
+    file_name = f"创业评测_{topic}_{datetime.now().strftime('%Y%m%d')}.docx"
     
     st.download_button(
-        label="📥 下载这份评测报告",
-        data=article,
+        label="📥 下载 Word 报告 (手机友好版)",
+        data=binary_output,
         file_name=file_name,
-        mime="text/markdown"
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
+    # ==============================
+    
+    # ... (底部版权不变) ...
     # ==============================
 
     # 底部版权
